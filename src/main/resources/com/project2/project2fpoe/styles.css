@@ -1,0 +1,96 @@
+/* Main Characteristic of the container and background */
+.root {
+    -fx-background-color: #222436;
+    -fx-padding: 20;
+}
+
+/* Styles for the tittle label */
+.titleLabel {
+    -fx-text-fill: #358bfc;
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+/* Styles for the Sudoku grid */
+.sudoku-grid {
+    -fx-background-color: transparent;
+    -fx-border-color: #3a8bfc;
+    -fx-border-width: 3px;
+    -fx-border-radius: 6px;
+    -fx-padding: 15px;
+}
+
+/* Styles for the Sudoku Cells */
+.sudokuCell {
+    -fx-background-color: #90cbff;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-alignment: center;
+    -fx-border-color: #3a8bfc;
+    -fx-border-width: 3px;
+    -fx-border-radius: 3px;
+    -fx-effect: dropshadow(gaussian, #00000066, 3, 0.5, 1, 1);
+}
+
+/* Styles when a sudoku Cell has the mouse over it */
+.sudokuCell:hover {
+    -fx-background-color: #358bfc;
+    -fx-cursor: hand;
+}
+
+/* Styles when a sudoku Cell is selected */
+.sudokuCell:focused {
+    -fx-border-color: #3a8bfc;
+    -fx-border-width: 2px;
+    -fx-background-color: #358bfc;
+}
+
+/* Styles when a sudoku Cell is predefined by the algorithm */
+.sudokuCell.predefined {
+    -fx-background-color: #1f6cf1;
+    -fx-border-color: #1f6cf1;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-opacity: 1.0;
+}
+
+/* Styles of the bottom container */
+.bottomContainer {
+    -fx-padding: 20px;
+}
+
+/* Styles of the bottom label who displays messages to the user */
+.bottomLabel {
+    -fx-text-fill: #358bfc;
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 16px;
+    -fx-padding: 10px;
+}
+
+/* Styles of the help button */
+.helpButton {
+    -fx-background-color: #358bfc;
+    -fx-text-fill: white;
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 8px 16px;
+    -fx-effect: dropshadow(gaussian, #00000044, 2, 0.2, 1, 1);
+}
+
+/* Styles of the help button when the mouse is over it */
+.helpButton:hover {
+    -fx-background-color: #90cbff;
+}
+
+/* Styles of the help button when it is pressed */
+.helpButton:pressed {
+    -fx-background-color: #1a3e8e;
+}

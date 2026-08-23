@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Imports -->
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- FXML Document -->
+<!-- This file defines the layout and structure of the Sudoku game interface. -->
+<!-- The main container is a BorderPane, which allows for flexible positioning of child nodes. -->
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.project2.project2fpoe.controller.SudokuController"
+            prefWidth="400"
+            prefHeight="500"
+            stylesheets="@styles.css">
+
+    <!-- Top section of the BorderPane -->
+    <top>
+        <Label text="Sudoku 6x6"
+               styleClass="titleLabel"
+               BorderPane.alignment="CENTER"/>
+    </top>
+
+    <!-- Center section of the BorderPane -->
+    <center>
+
+        <!-- GridPane for the Sudoku grid -->
+        <GridPane fx:id="sudokuGrid"
+                  hgap="5"
+                  vgap="5"
+                  styleClass="sudoku-grid"
+                  BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+            </padding>
+        </GridPane>
+
+    </center>
+
+    <!-- Bottom section of the BorderPane -->
+    <bottom>
+
+        <!-- VBox for the bottom container -->
+        <VBox alignment="CENTER" styleClass="bottomContainer">
+
+            <!-- Label that display messages -->
+            <Label text="Juega hasta completar el sudoku"
+                   fx:id="bottomLabel"
+                   styleClass="bottomLabel"
+                   BorderPane.alignment="CENTER"
+            />
+
+            <!-- Button to use the help option -->
+            <Button text="Ayuda"
+                    fx:id="helpButton"
+                    styleClass="helpButton"
+                    BorderPane.alignment="CENTER"
+                    maxWidth="120"
+                    prefHeight="40"
+            />
+        </VBox>
+    </bottom>
+
+</BorderPane>
