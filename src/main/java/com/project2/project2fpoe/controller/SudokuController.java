@@ -7,6 +7,7 @@ package com.project2.project2fpoe.controller;
 // Imports
 import com.project2.project2fpoe.model.Difficulty;
 import com.project2.project2fpoe.model.Sudoku;
+import com.project2.project2fpoe.view.StageStart;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -14,6 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import java.io.IOException;
 
 /**
  * SudokuController class to handle the Sudoku game logic and UI interactions.
@@ -31,6 +34,9 @@ public class SudokuController {
 
     @FXML
     private Button helpButton; // Button to provide hints
+
+    @FXML
+    private Button menuButton; // Button to go back to the start screen
 
     @FXML
     private Label bottomLabel; // Label to display messages to the user
@@ -51,6 +57,20 @@ public class SudokuController {
         helpButton.setOnAction(e -> showHint()); // Set up the hint button action
         helpButton.setVisible(hintsEnabled); // Hide the hint button if hints are disabled
         helpButton.setManaged(hintsEnabled); // Do not reserve space for a hidden button
+        menuButton.setOnAction(e -> backToMenu()); // Set up the menu button action
+    }
+
+    /**
+     * Opens the start screen and closes the current game, which is discarded.
+     * This method is called when the user clicks the menu button.
+     * */
+    private void backToMenu() {
+        try {
+            new StageStart(); // Open the start screen
+            ((Stage) menuButton.getScene().getWindow()).close(); // Close the game
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo abrir el menú", e);
+        }
     }
 
     /**
