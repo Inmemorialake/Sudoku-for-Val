@@ -51,7 +51,7 @@
         <VBox alignment="CENTER" styleClass="bottomContainer">
 
             <!-- Label that display messages -->
-            <Label text="Juega hasta completar el sudoku"
+            <Label text="Vos podés"
                    fx:id="bottomLabel"
                    styleClass="bottomLabel"
                    BorderPane.alignment="CENTER"
@@ -69,7 +69,7 @@
                 />
 
                 <!-- Button to use the help option -->
-                <Button text="Ayuda"
+                <Button text="Pista"
                         fx:id="helpButton"
                         styleClass="helpButton"
                         prefWidth="120"

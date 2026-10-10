@@ -9,9 +9,9 @@ package com.project2.project2fpoe.model;
  * Each level defines how many predefined numbers are placed in every block.
  */
 public enum Difficulty {
-    EASY("Fácil", 5),
-    MEDIUM("Medio", 4),
-    HARD("Difícil", 3);
+    EASY("Tranqui", 5),
+    MEDIUM("Normal", 4),
+    HARD("Reto", 3);
 
     // Attributes
     private final String label; // Name shown to the user

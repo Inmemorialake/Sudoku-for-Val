@@ -25,23 +25,23 @@
 
     <!-- Difficulty selector -->
     <VBox alignment="CENTER" spacing="12">
-        <Label text="Dificultad" styleClass="sectionLabel"/>
+        <Label text="¿Cómo te sentís hoy?" styleClass="sectionLabel"/>
 
         <fx:define>
             <ToggleGroup fx:id="difficultyGroup"/>
         </fx:define>
 
         <HBox alignment="CENTER" spacing="10">
-            <ToggleButton text="Fácil" fx:id="easyButton" toggleGroup="$difficultyGroup" styleClass="difficultyButton"/>
-            <ToggleButton text="Medio" fx:id="mediumButton" toggleGroup="$difficultyGroup" styleClass="difficultyButton" selected="true"/>
-            <ToggleButton text="Difícil" fx:id="hardButton" toggleGroup="$difficultyGroup" styleClass="difficultyButton"/>
+            <ToggleButton text="Tranqui" fx:id="easyButton" toggleGroup="$difficultyGroup" styleClass="difficultyButton"/>
+            <ToggleButton text="Normal" fx:id="mediumButton" toggleGroup="$difficultyGroup" styleClass="difficultyButton" selected="true"/>
+            <ToggleButton text="Reto" fx:id="hardButton" toggleGroup="$difficultyGroup" styleClass="difficultyButton"/>
         </HBox>
     </VBox>
 
     <!-- Option to enable or disable the hints -->
-    <CheckBox text="Permitir ayudas" fx:id="hintsCheckBox" selected="true" styleClass="hintsCheckBox"/>
+    <CheckBox text="Quiero pistas por si acaso" fx:id="hintsCheckBox" selected="true" styleClass="hintsCheckBox"/>
 
     <!-- Button to start the game -->
-    <Button text="Jugar" fx:id="playButton" styleClass="helpButton" prefWidth="160" prefHeight="45"/>
+    <Button text="¡A jugar!" fx:id="playButton" styleClass="helpButton" prefWidth="160" prefHeight="45"/>
 
 </VBox>

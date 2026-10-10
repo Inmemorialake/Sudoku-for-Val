@@ -122,14 +122,14 @@ public class SudokuController {
                         // Remove the previous number of the cell, so it can be replaced
                         sudoku.getBoard().get(finalRow).set(finalCol, 0);
                         cell.getStyleClass().removeAll("error", "hint"); // Reset the cell style
-                        bottomLabel.setText("Juega hasta completar el sudoku"); // Reset to default message
+                        bottomLabel.setText("Vos podés"); // Reset to default message
                         bottomLabel.setTextFill(Color.web("#9b6bff")); // Set the label color to default
 
                         if (!newValue.isEmpty()) { // If not empty, parse the value
                             int value = Integer.parseInt(newValue); // Parse the input value
                             if (!sudoku.setCell(finalRow, finalCol, value)) { // Check if the move is valid
                                 cell.getStyleClass().add("error"); // Set error style
-                                bottomLabel.setText("Número inválido o no correspondiente en el lugar"); // Display error message
+                                bottomLabel.setText("Ahí eso no va, bb"); // Display error message
                                 bottomLabel.setTextFill(Color.web("#c0476a")); // Set the label color to wine
                             } else if (sudoku.isSolved()) { // Check if the Sudoku is solved
                                 disableSudoku(); // Disable the Sudoku board
@@ -235,7 +235,7 @@ public class SudokuController {
             }
         }
         helpButton.setDisable(true); // Disable the hint button
-        bottomLabel.setText("¡Felicidades! Has resuelto el Sudoku."); // Display success message
+        bottomLabel.setText("Buena esa, sos una dura"); // Display success message
         bottomLabel.setTextFill(Color.LIGHTGREEN); // Set the label color to light green
     }
 
@@ -247,7 +247,7 @@ public class SudokuController {
     private void showHint() {
         int[] hint = sudoku.findHint(); // Get {row, col, value} of a move that keeps the board resolvable
         if (hint == null) { // The current board has no solution
-            bottomLabel.setText("No hay solución con estos números, borra alguno"); // Display warning message
+            bottomLabel.setText("Te metiste a un callejón sin salida, oís"); // Display warning message
             bottomLabel.setTextFill(Color.web("#c0476a")); // Set the label color to wine
             return;
         }
