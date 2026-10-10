@@ -88,13 +88,13 @@ public class SudokuController implements Initializable {
                             if (!newValue.isEmpty()) { // If not empty, parse the value
                                 int value = Integer.parseInt(newValue); // Parse the input value
                                 if (!sudoku.setCell(finalRow, finalCol, value)) { // Check if the move is valid
-                                    cell.setStyle("-fx-background-color: #ff0000; -fx-border-color: #ff0000;"); // Set error style
+                                    cell.setStyle("-fx-background-color: #7b1e3a; -fx-border-color: #7b1e3a;"); // Set error style
                                     bottomLabel.setText("Número inválido o no correspondiente en el lugar"); // Display error message
-                                    bottomLabel.setTextFill(Color.RED); // Set the label color to red
+                                    bottomLabel.setTextFill(Color.web("#c0476a")); // Set the label color to wine
                                 } else {
-                                    cell.setStyle("-fx-background-color: #90cbff;"); // Set valid style
+                                    cell.setStyle("-fx-background-color: #b99cff;"); // Set valid style
                                     bottomLabel.setText("Juega hasta completar el sudoku"); // Reset to default message
-                                    bottomLabel.setTextFill(Color.web("#358bfc")); // Set the label color to default
+                                    bottomLabel.setTextFill(Color.web("#9b6bff")); // Set the label color to default
                                     if (sudoku.isSolved()) { // Check if the Sudoku is solved
                                         disableSudoku(); // Disable the Sudoku board
                                     }
@@ -151,7 +151,7 @@ public class SudokuController implements Initializable {
         for (javafx.scene.Node node : sudokuGrid.getChildren()) { // Loop through the grid nodes
             if (node instanceof TextField textField) { // Check if the node is a TextField
                 textField.setEditable(false); // Make the cell non-editable
-                textField.setStyle("-fx-background-color: #90cbff; -fx-text-fill: white;"); // Set the cell style
+                textField.setStyle("-fx-background-color: #b99cff; -fx-text-fill: white;"); // Set the cell style
                 helpButton.setDisable(true); // Disable the hint button
             }
         }
@@ -168,7 +168,7 @@ public class SudokuController implements Initializable {
         int[] hint = sudoku.findHint(); // Get {row, col, value} of a move that keeps the board resolvable
         if (hint == null) { // The current board has no solution
             bottomLabel.setText("No hay solución con estos números, borra alguno"); // Display warning message
-            bottomLabel.setTextFill(Color.RED); // Set the label color to red
+            bottomLabel.setTextFill(Color.web("#c0476a")); // Set the label color to wine
             return;
         }
 
@@ -179,7 +179,7 @@ public class SudokuController implements Initializable {
             if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col && node instanceof TextField textField) {
                 textField.setText(String.valueOf(hint[2])); // Set the cell's text to the hint value
                 if (!sudoku.isSolved()) { // Keep the solved style if the hint completed the Sudoku
-                    textField.setStyle("-fx-background-color: #4da6ff; -fx-text-fill: white;"); // Set the cell style
+                    textField.setStyle("-fx-background-color: #a57dff; -fx-text-fill: white;"); // Set the cell style
                 }
                 return; // Exit the method after providing a hint
             }

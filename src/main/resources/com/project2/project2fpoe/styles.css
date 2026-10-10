@@ -1,12 +1,12 @@
 /* Main Characteristic of the container and background */
 .root {
-    -fx-background-color: #222436;
+    -fx-background-color: #221a2e;
     -fx-padding: 20;
 }
 
 /* Styles for the tittle label */
 .titleLabel {
-    -fx-text-fill: #358bfc;
+    -fx-text-fill: #9b6bff;
     -fx-font-family: "JetBrains Mono", monospace;
     -fx-font-size: 28px;
     -fx-font-weight: bold;
@@ -16,7 +16,7 @@
 /* Styles for the Sudoku grid */
 .sudoku-grid {
     -fx-background-color: transparent;
-    -fx-border-color: #3a8bfc;
+    -fx-border-color: #8a5cf6;
     -fx-border-width: 3px;
     -fx-border-radius: 6px;
     -fx-padding: 15px;
@@ -24,12 +24,12 @@
 
 /* Styles for the Sudoku Cells */
 .sudokuCell {
-    -fx-background-color: #90cbff;
+    -fx-background-color: #b99cff;
     -fx-text-fill: #ffffff;
     -fx-font-size: 18px;
     -fx-font-family: "JetBrains Mono", monospace;
     -fx-alignment: center;
-    -fx-border-color: #3a8bfc;
+    -fx-border-color: #8a5cf6;
     -fx-border-width: 3px;
     -fx-border-radius: 3px;
     -fx-effect: dropshadow(gaussian, #00000066, 3, 0.5, 1, 1);
@@ -37,21 +37,21 @@
 
 /* Styles when a sudoku Cell has the mouse over it */
 .sudokuCell:hover {
-    -fx-background-color: #358bfc;
+    -fx-background-color: #9b6bff;
     -fx-cursor: hand;
 }
 
 /* Styles when a sudoku Cell is selected */
 .sudokuCell:focused {
-    -fx-border-color: #3a8bfc;
+    -fx-border-color: #8a5cf6;
     -fx-border-width: 2px;
-    -fx-background-color: #358bfc;
+    -fx-background-color: #9b6bff;
 }
 
 /* Styles when a sudoku Cell is predefined by the algorithm */
 .sudokuCell.predefined {
-    -fx-background-color: #1f6cf1;
-    -fx-border-color: #1f6cf1;
+    -fx-background-color: #6b3fd4;
+    -fx-border-color: #6b3fd4;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-opacity: 1.0;
@@ -64,7 +64,7 @@
 
 /* Styles of the bottom label who displays messages to the user */
 .bottomLabel {
-    -fx-text-fill: #358bfc;
+    -fx-text-fill: #9b6bff;
     -fx-font-family: "JetBrains Mono", monospace;
     -fx-font-size: 16px;
     -fx-padding: 10px;
@@ -72,7 +72,7 @@
 
 /* Styles of the help button */
 .helpButton {
-    -fx-background-color: #358bfc;
+    -fx-background-color: #9b6bff;
     -fx-text-fill: white;
     -fx-font-family: "JetBrains Mono", monospace;
     -fx-font-size: 16px;
@@ -87,10 +87,10 @@
 
 /* Styles of the help button when the mouse is over it */
 .helpButton:hover {
-    -fx-background-color: #90cbff;
+    -fx-background-color: #b99cff;
 }
 
 /* Styles of the help button when it is pressed */
 .helpButton:pressed {
-    -fx-background-color: #1a3e8e;
+    -fx-background-color: #4a2a8c;
 }
