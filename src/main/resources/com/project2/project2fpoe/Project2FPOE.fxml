@@ -21,6 +21,7 @@
     <!-- Top section of the BorderPane -->
     <top>
         <Label text="Sudoku 9x9"
+               fx:id="titleLabel"
                styleClass="titleLabel"
                BorderPane.alignment="CENTER"/>
     </top>

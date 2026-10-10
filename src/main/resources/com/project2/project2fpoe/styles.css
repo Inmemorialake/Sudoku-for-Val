@@ -57,6 +57,41 @@
     -fx-opacity: 1.0;
 }
 
+/* Styles when a sudoku Cell was filled by the hint button */
+.sudokuCell.hint {
+    -fx-background-color: #a57dff;
+}
+
+/* Styles when a sudoku Cell shares the row, column or block with the selected cell */
+.sudokuCell.highlighted {
+    -fx-background-color: #a283f5;
+}
+
+/* Styles when a predefined sudoku Cell shares the row, column or block with the selected cell */
+.sudokuCell.predefined.highlighted {
+    -fx-background-color: #5a32b5;
+    -fx-border-color: #5a32b5;
+}
+
+/* Styles when a sudoku Cell has the same number as the selected cell */
+.sudokuCell.sameNumber,
+.sudokuCell.predefined.sameNumber {
+    -fx-background-color: #4a2a8c;
+    -fx-border-color: #4a2a8c;
+    -fx-font-weight: bold;
+}
+
+/* Styles when a sudoku Cell has an invalid number */
+.sudokuCell.error {
+    -fx-background-color: #7b1e3a;
+    -fx-border-color: #7b1e3a;
+}
+
+/* Border of the selected sudoku Cell, so it stands out over every other style */
+.sudokuCell:focused {
+    -fx-border-color: #ffffff;
+}
+
 /* Styles of the bottom container */
 .bottomContainer {
     -fx-padding: 20px;

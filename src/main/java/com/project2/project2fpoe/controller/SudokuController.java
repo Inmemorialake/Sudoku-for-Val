@@ -30,6 +30,9 @@ public class SudokuController {
      * These elements are defined in the FXML file and are used to create the Sudoku UI.
      * */
     @FXML
+    private Label titleLabel; // Label with the title of the game
+
+    @FXML
     private GridPane sudokuGrid; // GridPane to hold the Sudoku cells
 
     @FXML
@@ -43,6 +46,8 @@ public class SudokuController {
 
     private Sudoku sudoku; // Sudoku game logic
 
+    private TextField[][] cells; // Cells of the grid, by row and column
+
     /**
      * Starts the Sudoku game by generating a playable board and setting up the UI.
      * This method is called by the stage after the FXML file is loaded.
@@ -51,6 +56,7 @@ public class SudokuController {
      * @param hintsEnabled true to show the hint button, false to hide it
      * */
     public void startGame(Difficulty difficulty, boolean hintsEnabled) {
+        titleLabel.setText("Sudoku · " + difficulty.getLabel()); // Show the difficulty in the title
         sudoku = new Sudoku(difficulty); // Create a new Sudoku instance
         sudoku.generatePlayableBoard(); // Generate a playable Sudoku board
         createGrid(); // Create the grid of TextFields for the Sudoku cells
@@ -79,11 +85,13 @@ public class SudokuController {
      * */
     private void createGrid() {
         int size = sudoku.getSize();
+        cells = new TextField[size][size];
         for (int row = 0; row < size; row++) { // Loop through rows
             for (int col = 0; col < size; col++) { // Loop through columns
 
                 // Create a TextField for each cell
                 TextField cell = new TextField();
+                cells[row][col] = cell;
                 cell.setPrefSize(50, 50);
                 cell.getStyleClass().add("sudokuCell");
 
@@ -106,29 +114,34 @@ public class SudokuController {
                 } else {
                     // Set the cell's text to empty and add a listener for user input
                     cell.textProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue.matches("[1-9]?")) { // Check if the input is valid (1-9)
-                            if (!newValue.isEmpty()) { // If not empty, parse the value
-                                int value = Integer.parseInt(newValue); // Parse the input value
-                                if (!sudoku.setCell(finalRow, finalCol, value)) { // Check if the move is valid
-                                    cell.setStyle("-fx-background-color: #7b1e3a; -fx-border-color: #7b1e3a;"); // Set error style
-                                    bottomLabel.setText("Número inválido o no correspondiente en el lugar"); // Display error message
-                                    bottomLabel.setTextFill(Color.web("#c0476a")); // Set the label color to wine
-                                } else {
-                                    cell.setStyle("-fx-background-color: #b99cff;"); // Set valid style
-                                    bottomLabel.setText("Juega hasta completar el sudoku"); // Reset to default message
-                                    bottomLabel.setTextFill(Color.web("#9b6bff")); // Set the label color to default
-                                    if (sudoku.isSolved()) { // Check if the Sudoku is solved
-                                        disableSudoku(); // Disable the Sudoku board
-                                    }
-                                }
-                            } else {
-                                sudoku.getBoard().get(finalRow).set(finalCol, 0); // If empty, reset the cell
-                            }
-                        } else {
+                        if (!newValue.matches("[1-9]?")) { // Check if the input is valid (1-9)
                             cell.setText(""); // If invalid input, clear the cell
+                            return;
                         }
+
+                        // Remove the previous number of the cell, so it can be replaced
+                        sudoku.getBoard().get(finalRow).set(finalCol, 0);
+                        cell.getStyleClass().removeAll("error", "hint"); // Reset the cell style
+                        bottomLabel.setText("Juega hasta completar el sudoku"); // Reset to default message
+                        bottomLabel.setTextFill(Color.web("#9b6bff")); // Set the label color to default
+
+                        if (!newValue.isEmpty()) { // If not empty, parse the value
+                            int value = Integer.parseInt(newValue); // Parse the input value
+                            if (!sudoku.setCell(finalRow, finalCol, value)) { // Check if the move is valid
+                                cell.getStyleClass().add("error"); // Set error style
+                                bottomLabel.setText("Número inválido o no correspondiente en el lugar"); // Display error message
+                                bottomLabel.setTextFill(Color.web("#c0476a")); // Set the label color to wine
+                            } else if (sudoku.isSolved()) { // Check if the Sudoku is solved
+                                disableSudoku(); // Disable the Sudoku board
+                                return;
+                            }
+                        }
+                        updateHighlights(); // The numbers changed, so the highlighted cells may change too
                     });
                 }
+
+                // Highlight the related cells when the cell is selected
+                cell.focusedProperty().addListener((observable, wasFocused, isFocused) -> updateHighlights());
 
                 // Add a listener for key events to navigate through the grid
                 cell.setOnKeyPressed(event -> {
@@ -141,6 +154,50 @@ public class SudokuController {
                 });
 
                 sudokuGrid.add(cell, col, row); // Add the cell to the grid
+            }
+        }
+    }
+
+    /**
+     * Highlights the cells related to the selected cell: the ones in its row, column and block,
+     * and the ones with its same number. If no cell is selected, the highlights are removed.
+     * This method is called when a cell is selected or when a number changes.
+     * */
+    private void updateHighlights() {
+        int size = sudoku.getSize();
+
+        // Find the selected cell (none once the Sudoku is solved)
+        int selectedRow = -1;
+        int selectedCol = -1;
+        for (int row = 0; row < size && !sudoku.isSolved(); row++) {
+            for (int col = 0; col < size; col++) {
+                if (cells[row][col].isFocused()) {
+                    selectedRow = row;
+                    selectedCol = col;
+                }
+            }
+        }
+
+        for (int row = 0; row < size; row++) { // Loop through rows
+            for (int col = 0; col < size; col++) { // Loop through columns
+                TextField cell = cells[row][col];
+                cell.getStyleClass().removeAll("highlighted", "sameNumber"); // Remove the previous highlights
+                if (selectedRow == -1 || (row == selectedRow && col == selectedCol)) {
+                    continue; // Nothing selected, or the selected cell itself
+                }
+
+                // Check if the cell shares the row, the column or the block with the selected cell
+                boolean sameBlock = row / sudoku.getBoxRows() == selectedRow / sudoku.getBoxRows()
+                        && col / sudoku.getBoxCols() == selectedCol / sudoku.getBoxCols();
+                if (row == selectedRow || col == selectedCol || sameBlock) {
+                    cell.getStyleClass().add("highlighted");
+                }
+
+                // Check if the cell has the same number as the selected cell
+                String selectedText = cells[selectedRow][selectedCol].getText();
+                if (!selectedText.isEmpty() && selectedText.equals(cell.getText())) {
+                    cell.getStyleClass().add("sameNumber");
+                }
             }
         }
     }
@@ -173,10 +230,11 @@ public class SudokuController {
         for (javafx.scene.Node node : sudokuGrid.getChildren()) { // Loop through the grid nodes
             if (node instanceof TextField textField) { // Check if the node is a TextField
                 textField.setEditable(false); // Make the cell non-editable
+                textField.getStyleClass().removeAll("highlighted", "sameNumber", "hint"); // Remove the highlights
                 textField.setStyle("-fx-background-color: #b99cff; -fx-text-fill: white;"); // Set the cell style
-                helpButton.setDisable(true); // Disable the hint button
             }
         }
+        helpButton.setDisable(true); // Disable the hint button
         bottomLabel.setText("¡Felicidades! Has resuelto el Sudoku."); // Display success message
         bottomLabel.setTextFill(Color.LIGHTGREEN); // Set the label color to light green
     }
@@ -201,7 +259,7 @@ public class SudokuController {
             if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col && node instanceof TextField textField) {
                 textField.setText(String.valueOf(hint[2])); // Set the cell's text to the hint value
                 if (!sudoku.isSolved()) { // Keep the solved style if the hint completed the Sudoku
-                    textField.setStyle("-fx-background-color: #a57dff; -fx-text-fill: white;"); // Set the cell style
+                    textField.getStyleClass().add("hint"); // Set the hint style
                 }
                 return; // Exit the method after providing a hint
             }
