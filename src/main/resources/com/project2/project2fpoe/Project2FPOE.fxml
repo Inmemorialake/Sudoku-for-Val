@@ -13,13 +13,13 @@
 <!-- The main container is a BorderPane, which allows for flexible positioning of child nodes. -->
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.project2.project2fpoe.controller.SudokuController"
-            prefWidth="400"
-            prefHeight="500"
+            prefWidth="620"
+            prefHeight="760"
             stylesheets="@styles.css">
 
     <!-- Top section of the BorderPane -->
     <top>
-        <Label text="Sudoku 6x6"
+        <Label text="Sudoku 9x9"
                styleClass="titleLabel"
                BorderPane.alignment="CENTER"/>
     </top>

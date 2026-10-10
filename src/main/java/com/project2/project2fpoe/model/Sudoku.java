@@ -18,11 +18,15 @@ public class Sudoku {
     // Attributes
     private final List<List<Integer>> board;
     private List<List<Integer>> boardCopy;
-    private static final int SIZE = 6;
+    private static final int SIZE = 9;
+    private static final int BOX_ROWS = 3; // Rows per block
+    private static final int BOX_COLS = 3; // Columns per block
+    private static final int CLUES_PER_BLOCK = 4; // Predefined numbers per block
+    private static final int MAX_PLACEMENT_ATTEMPTS = 1000; // Attempts before restarting a generation
 
     /**
      * Constructor to initialize the Sudoku board.
-     * The board is a 6x6 grid initialized with zeros.
+     * The board is a 9x9 grid initialized with zeros.
      */
     public Sudoku() {
         // Initialize the board
@@ -44,29 +48,32 @@ public class Sudoku {
     public void generatePlayableBoard() {
         do {
             clearBoard(); // Clear the board before filling
-            fillBlocksWithTwoNumbers(); // Fill blocks with two numbers
-        } while (!isResolvable()); // Ensure the board is resolvable
+        } while (!fillBlocksWithClues() || !isResolvable()); // Ensure the board was filled and is resolvable
 
         // Print the generated board
         //printBoard();
-        System.out.println("<---------->"); // Print separator
         // Print the copy of the board that will be used for solving
         //printBoardCopy();
-        System.out.println("<---------->"); // Print separator
     }
 
     /**
-     * Method to fill blocks of the Sudoku board with two numbers.
-     * This method randomly selects two cells in each block and fills them with numbers.
+     * Method to fill blocks of the Sudoku board with clues.
+     * This method randomly selects CLUES_PER_BLOCK cells in each block and fills them with numbers.
+     *
+     * @return true if every block was filled, false if it got stuck and the generation must restart
      */
-    private void fillBlocksWithTwoNumbers() {
-        // Iterate through each block in the 6x6 grid
-        for (int blockRow = 0; blockRow < SIZE; blockRow += 2) { // Block rows
-            for (int blockCol = 0; blockCol < SIZE; blockCol += 3) { // Block columns
-                int numbersToPlace = 2; // Number of cells to fill in the block
+    private boolean fillBlocksWithClues() {
+        // Iterate through each block in the grid
+        for (int blockRow = 0; blockRow < SIZE; blockRow += BOX_ROWS) { // Block rows
+            for (int blockCol = 0; blockCol < SIZE; blockCol += BOX_COLS) { // Block columns
+                int numbersToPlace = CLUES_PER_BLOCK; // Number of cells to fill in the block
+                int attempts = 0; // Attempts made in this block
                 while (numbersToPlace > 0) { // While there are numbers to place
-                    int row = blockRow + (int) (Math.random() * 2); // Random row in the block
-                    int col = blockCol + (int) (Math.random() * 3); // Random column in the block
+                    if (++attempts > MAX_PLACEMENT_ATTEMPTS) { // The block may have no valid placements left
+                        return false;
+                    }
+                    int row = blockRow + (int) (Math.random() * BOX_ROWS); // Random row in the block
+                    int col = blockCol + (int) (Math.random() * BOX_COLS); // Random column in the block
                     // Check if the cell is empty and if the number can be placed
                     if (board.get(row).get(col) == 0) {
                         int value = (int) (Math.random() * SIZE) + 1; // Random number between 1 and SIZE
@@ -78,6 +85,7 @@ public class Sudoku {
                 }
             }
         }
+        return true; // All blocks were filled
     }
 
     /**
@@ -96,6 +104,56 @@ public class Sudoku {
     }
 
     /**
+     * Method to find a hint for the current state of the board.
+     * This method tries every valid move and only accepts one that keeps the board resolvable.
+     * If no move does, it checks one last time whether the board is resolvable at all.
+     *
+     * @return an array {row, col, value} with the hint, or null if the current board has no solution
+     */
+    public int[] findHint() {
+        for (int row = 0; row < SIZE; row++) { // Iterate through each row
+            for (int col = 0; col < SIZE; col++) { // Iterate through each column
+                if (board.get(row).get(col) == 0) { // Check if the cell is empty
+                    for (int value = 1; value <= SIZE; value++) { // Try each value from 1 to SIZE
+                        // Accept the move only if it is valid and the board stays resolvable after it
+                        if (isValidMove(board, row, col, value) && isResolvableWith(row, col, value)) {
+                            return new int[]{row, col, value};
+                        }
+                    }
+                }
+            }
+        }
+
+        // No move kept the board resolvable: check one last time the board itself
+        if (isResolvable()) {
+            for (int row = 0; row < SIZE; row++) { // Iterate through each row
+                for (int col = 0; col < SIZE; col++) { // Iterate through each column
+                    if (board.get(row).get(col) == 0) { // Check if the cell is empty
+                        return new int[]{row, col, boardCopy.get(row).get(col)}; // Value from the solution
+                    }
+                }
+            }
+        }
+        return null; // The numbers placed so far lead to a dead end
+    }
+
+    /**
+     * Method to check if the board would stay resolvable after a move.
+     * The move is placed temporarily and removed after the check.
+     *
+     * @param row the row index of the cell
+     * @param col the column index of the cell
+     * @param value the value to try in the cell
+     * @return true if the board is resolvable with the move, false otherwise
+     */
+    private boolean isResolvableWith(int row, int col, int value) {
+        board.get(row).set(col, value); // Place the move temporarily
+        boolean resolvable = isResolvable(); // Try to solve the board with the move
+        board.get(row).set(col, 0); // Remove the move
+        return resolvable;
+    }
+
+    /**
      * Method to clear the Sudoku board.
      * This method sets all cells in the board to zero.
      */
@@ -107,6 +165,18 @@ public class Sudoku {
 
     public List<List<Integer>> getBoard() {
         return board; // Return the original board
+    }
+
+    public int getSize() {
+        return SIZE; // Return the number of rows and columns
+    }
+
+    public int getBoxRows() {
+        return BOX_ROWS; // Return the number of rows per block
+    }
+
+    public int getBoxCols() {
+        return BOX_COLS; // Return the number of columns per block
     }
 
     /**
@@ -153,11 +223,11 @@ public class Sudoku {
             }
         }
 
-        // Check if the value already exists in the 2x3 block
-        int blockRowStart = (row / 2) * 2;
-        int blockColStart = (col / 3) * 3;
-        for (int i = blockRowStart; i < blockRowStart + 2; i++) {
-            for (int j = blockColStart; j < blockColStart + 3; j++) {
+        // Check if the value already exists in the block
+        int blockRowStart = (row / BOX_ROWS) * BOX_ROWS;
+        int blockColStart = (col / BOX_COLS) * BOX_COLS;
+        for (int i = blockRowStart; i < blockRowStart + BOX_ROWS; i++) {
+            for (int j = blockColStart; j < blockColStart + BOX_COLS; j++) {
                 if (board.get(i).get(j) == value) {
                     return false; // Value already exists in the block
                 }
@@ -199,11 +269,11 @@ public class Sudoku {
         }
 
         // Check if all blocks are valid
-        for (int blockRow = 0; blockRow < SIZE; blockRow += 2) { // Iterate through each block
-            for (int blockCol = 0; blockCol < SIZE; blockCol += 3) { // Iterate through each block
+        for (int blockRow = 0; blockRow < SIZE; blockRow += BOX_ROWS) { // Iterate through each block
+            for (int blockCol = 0; blockCol < SIZE; blockCol += BOX_COLS) { // Iterate through each block
                 boolean[] seen = new boolean[SIZE + 1]; // Create an array to track seen values
-                for (int row = blockRow; row < blockRow + 2; row++) { // Iterate through each row in the block
-                    for (int col = blockCol; col < blockCol + 3; col++) { // Iterate through each column in the block
+                for (int row = blockRow; row < blockRow + BOX_ROWS; row++) { // Iterate through each row in the block
+                    for (int col = blockCol; col < blockCol + BOX_COLS; col++) { // Iterate through each column in the block
                         int value = board.get(row).get(col); // Get the value in the cell
                         if (value == 0 || seen[value]) { // Check if the value is zero or already seen
                             return false; // Invalid Sudoku

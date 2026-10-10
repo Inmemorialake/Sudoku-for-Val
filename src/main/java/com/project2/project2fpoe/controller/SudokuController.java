@@ -7,6 +7,7 @@ package com.project2.project2fpoe.controller;
 // Imports
 import com.project2.project2fpoe.model.Sudoku;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -55,13 +56,19 @@ public class SudokuController implements Initializable {
      * Each cell is represented by a TextField, and listeners are added to handle user input.
      * */
     private void createGrid() {
-        for (int row = 0; row < 6; row++) { // Loop through rows
-            for (int col = 0; col < 6; col++) { // Loop through columns
+        int size = sudoku.getSize();
+        for (int row = 0; row < size; row++) { // Loop through rows
+            for (int col = 0; col < size; col++) { // Loop through columns
 
                 // Create a TextField for each cell
                 TextField cell = new TextField();
-                cell.setPrefSize(60, 60);
+                cell.setPrefSize(50, 50);
                 cell.getStyleClass().add("sudokuCell");
+
+                // Add extra space before each cell that starts a new block
+                boolean startsBlockRow = row != 0 && row % sudoku.getBoxRows() == 0;
+                boolean startsBlockCol = col != 0 && col % sudoku.getBoxCols() == 0;
+                GridPane.setMargin(cell, new Insets(startsBlockRow ? 6 : 0, 0, 0, startsBlockCol ? 6 : 0));
 
                 // Set the cell's number from the original board
                 int finalRow = row;
@@ -77,7 +84,7 @@ public class SudokuController implements Initializable {
                 } else {
                     // Set the cell's text to empty and add a listener for user input
                     cell.textProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue.matches("[1-6]?")) { // Check if the input is valid (1-6)
+                        if (newValue.matches("[1-9]?")) { // Check if the input is valid (1-9)
                             if (!newValue.isEmpty()) { // If not empty, parse the value
                                 int value = Integer.parseInt(newValue); // Parse the input value
                                 if (!sudoku.setCell(finalRow, finalCol, value)) { // Check if the move is valid
@@ -124,7 +131,8 @@ public class SudokuController implements Initializable {
      * @param col the column index of the cell to focus on
      */
     private void moveFocus(int row, int col) {
-        if (row >= 0 && row < 6 && col >= 0 && col < 6) { // Check if the indices are within bounds
+        int size = sudoku.getSize();
+        if (row >= 0 && row < size && col >= 0 && col < size) { // Check if the indices are within bounds
             for (javafx.scene.Node node : sudokuGrid.getChildren()) { // Loop through the grid nodes
                 // Check if the node is a TextField and matches the specified row and column
                 if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col && node instanceof TextField textField) {
@@ -152,26 +160,28 @@ public class SudokuController implements Initializable {
     }
 
     /**
-     * Provides a hint for the Sudoku game by filling in a valid number in an empty cell.
+     * Provides a hint for the Sudoku game by filling an empty cell with a move that keeps the board
+     * resolvable. If the numbers placed so far have no solution, a message is shown instead.
      * This method is called when the user clicks the hint button.
      * */
     private void showHint() {
-        for (int row = 0; row < 6; row++) { // Loop through rows
-            for (int col = 0; col < 6; col++) { // Loop through columns
-                if (sudoku.getBoard().get(row).get(col) == 0) { // Check if the cell is empty
-                    for (int value = 1; value <= 6; value++) { // Loop through possible values (1-6)
-                        if (sudoku.isValidMove(sudoku.getBoard() ,row, col, value)) { // Check if the move is valid
-                            for (javafx.scene.Node node : sudokuGrid.getChildren()) { // Loop through the grid nodes
-                                // Check if the node is a TextField and matches the specified row and column
-                                if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col && node instanceof TextField textField) {
-                                    textField.setText(String.valueOf(value)); // Set the cell's text to the hint value
-                                    textField.setStyle("-fx-background-color: #4da6ff; -fx-text-fill: white;"); // Set the cell style
-                                }
-                            }
-                            return; // Exit the method after providing a hint
-                        }
-                    }
+        int[] hint = sudoku.findHint(); // Get {row, col, value} of a move that keeps the board resolvable
+        if (hint == null) { // The current board has no solution
+            bottomLabel.setText("No hay solución con estos números, borra alguno"); // Display warning message
+            bottomLabel.setTextFill(Color.RED); // Set the label color to red
+            return;
+        }
+
+        int row = hint[0];
+        int col = hint[1];
+        for (javafx.scene.Node node : sudokuGrid.getChildren()) { // Loop through the grid nodes
+            // Check if the node is a TextField and matches the hint's row and column
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col && node instanceof TextField textField) {
+                textField.setText(String.valueOf(hint[2])); // Set the cell's text to the hint value
+                if (!sudoku.isSolved()) { // Keep the solved style if the hint completed the Sudoku
+                    textField.setStyle("-fx-background-color: #4da6ff; -fx-text-fill: white;"); // Set the cell style
                 }
+                return; // Exit the method after providing a hint
             }
         }
     }
