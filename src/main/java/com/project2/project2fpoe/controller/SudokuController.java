@@ -5,24 +5,22 @@
 package com.project2.project2fpoe.controller;
 
 // Imports
+import com.project2.project2fpoe.model.Difficulty;
 import com.project2.project2fpoe.model.Sudoku;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * SudokuController class to handle the Sudoku game logic and UI interactions.
  * This class initializes the Sudoku board, handles user input, and provides hints.
  * It also manages the game state and displays messages to the user.
  * */
-public class SudokuController implements Initializable {
+public class SudokuController {
 
     /**
      * FXML elements for the Sudoku game.
@@ -40,15 +38,19 @@ public class SudokuController implements Initializable {
     private Sudoku sudoku; // Sudoku game logic
 
     /**
-     * Initializes the Sudoku game by generating a playable board and setting up the UI.
-     * This method is called when the FXML file is loaded.
+     * Starts the Sudoku game by generating a playable board and setting up the UI.
+     * This method is called by the stage after the FXML file is loaded.
+     *
+     * @param difficulty the difficulty that defines how many numbers are predefined
+     * @param hintsEnabled true to show the hint button, false to hide it
      * */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        sudoku = new Sudoku(); // Create a new Sudoku instance
+    public void startGame(Difficulty difficulty, boolean hintsEnabled) {
+        sudoku = new Sudoku(difficulty); // Create a new Sudoku instance
         sudoku.generatePlayableBoard(); // Generate a playable Sudoku board
         createGrid(); // Create the grid of TextFields for the Sudoku cells
         helpButton.setOnAction(e -> showHint()); // Set up the hint button action
+        helpButton.setVisible(hintsEnabled); // Hide the hint button if hints are disabled
+        helpButton.setManaged(hintsEnabled); // Do not reserve space for a hidden button
     }
 
     /**

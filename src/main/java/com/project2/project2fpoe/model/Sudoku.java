@@ -21,14 +21,16 @@ public class Sudoku {
     private static final int SIZE = 9;
     private static final int BOX_ROWS = 3; // Rows per block
     private static final int BOX_COLS = 3; // Columns per block
-    private static final int CLUES_PER_BLOCK = 4; // Predefined numbers per block
-    private static final int MAX_PLACEMENT_ATTEMPTS = 1000; // Attempts before restarting a generation
+    private final int cluesPerBlock; // Predefined numbers per block
 
     /**
      * Constructor to initialize the Sudoku board.
      * The board is a 9x9 grid initialized with zeros.
+     *
+     * @param difficulty the difficulty that defines how many numbers are predefined
      */
-    public Sudoku() {
+    public Sudoku(Difficulty difficulty) {
+        cluesPerBlock = difficulty.getCluesPerBlock();
         // Initialize the board
         board = new ArrayList<>();
         // Fill the board with zeros
@@ -43,12 +45,13 @@ public class Sudoku {
 
     /**
      * Method to generate a playable Sudoku board.
-     * This method fills the board with numbers and checks if the board is resolvable.
+     * This method builds a random complete solution and keeps some of its numbers as clues,
+     * so the board is always resolvable.
      */
     public void generatePlayableBoard() {
-        do {
-            clearBoard(); // Clear the board before filling
-        } while (!fillBlocksWithClues() || !isResolvable()); // Ensure the board was filled and is resolvable
+        clearBoard(); // Clear the board before filling
+        isResolvable(); // Solve the empty board: the copy becomes a random complete solution
+        fillBlocksWithClues(); // Keep some numbers of the solution in each block
 
         // Print the generated board
         //printBoard();
@@ -58,34 +61,24 @@ public class Sudoku {
 
     /**
      * Method to fill blocks of the Sudoku board with clues.
-     * This method randomly selects CLUES_PER_BLOCK cells in each block and fills them with numbers.
-     *
-     * @return true if every block was filled, false if it got stuck and the generation must restart
+     * This method randomly selects cluesPerBlock cells in each block and copies their numbers from the solution.
      */
-    private boolean fillBlocksWithClues() {
+    private void fillBlocksWithClues() {
         // Iterate through each block in the grid
         for (int blockRow = 0; blockRow < SIZE; blockRow += BOX_ROWS) { // Block rows
             for (int blockCol = 0; blockCol < SIZE; blockCol += BOX_COLS) { // Block columns
-                int numbersToPlace = CLUES_PER_BLOCK; // Number of cells to fill in the block
-                int attempts = 0; // Attempts made in this block
-                while (numbersToPlace > 0) { // While there are numbers to place
-                    if (++attempts > MAX_PLACEMENT_ATTEMPTS) { // The block may have no valid placements left
-                        return false;
-                    }
-                    int row = blockRow + (int) (Math.random() * BOX_ROWS); // Random row in the block
-                    int col = blockCol + (int) (Math.random() * BOX_COLS); // Random column in the block
-                    // Check if the cell is empty and if the number can be placed
-                    if (board.get(row).get(col) == 0) {
-                        int value = (int) (Math.random() * SIZE) + 1; // Random number between 1 and SIZE
-                        if (isValidMove(board ,row, col, value)) { // Check if the move is valid
-                            board.get(row).set(col, value); // Place the number
-                            numbersToPlace--; // Decrease the count of numbers to place
-                        }
-                    }
+                List<Integer> cells = new ArrayList<>(); // Positions of the cells in the block
+                for (int i = 0; i < BOX_ROWS * BOX_COLS; i++) {
+                    cells.add(i);
+                }
+                Collections.shuffle(cells); // Random order of the cells
+                for (int i = 0; i < cluesPerBlock; i++) { // Take the first cluesPerBlock cells
+                    int row = blockRow + cells.get(i) / BOX_COLS; // Row of the cell
+                    int col = blockCol + cells.get(i) % BOX_COLS; // Column of the cell
+                    board.get(row).set(col, boardCopy.get(row).get(col)); // Copy the number from the solution
                 }
             }
         }
-        return true; // All blocks were filled
     }
 
     /**
@@ -323,7 +316,12 @@ public class Sudoku {
         for (int row = 0; row < SIZE; row++) { // Iterate through each row
             for (int col = 0; col < SIZE; col++) { // Iterate through each column
                 if (boardCopy.get(row).get(col) == 0) { // Check if the cell is empty
-                    for (int value = 1; value <= SIZE; value++) { // Try each value from 1 to SIZE
+                    List<Integer> values = new ArrayList<>(); // Values from 1 to SIZE
+                    for (int value = 1; value <= SIZE; value++) {
+                        values.add(value);
+                    }
+                    Collections.shuffle(values); // Random order, so each generated solution is different
+                    for (int value : values) { // Try each value
                         if (isValidMove(boardCopy ,row, col, value)) { // Check if the move is valid
                             boardCopy.get(row).set(col, value); // Place the number
                             if (solve()) { // Recursively attempt to solve the board

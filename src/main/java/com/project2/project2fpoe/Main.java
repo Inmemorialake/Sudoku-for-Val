@@ -5,7 +5,7 @@
 package com.project2.project2fpoe;
 
 // Imports
-import com.project2.project2fpoe.view.StageSudoku;
+import com.project2.project2fpoe.view.StageStart;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
-        // Create an instance of StageSudoku to set up the main stage
-        new StageSudoku();
+        // Create an instance of StageStart to show the start screen
+        new StageStart();
     }
 }

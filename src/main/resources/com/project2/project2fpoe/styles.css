@@ -94,3 +94,71 @@
 .helpButton:pressed {
     -fx-background-color: #4a2a8c;
 }
+
+/* Styles for the title of the start screen */
+.startTitle {
+    -fx-text-fill: #9b6bff;
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 44px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #00000066, 6, 0.3, 2, 2);
+}
+
+/* Styles for the section labels of the start screen */
+.sectionLabel {
+    -fx-text-fill: #b99cff;
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 18px;
+}
+
+/* Styles of the difficulty buttons */
+.difficultyButton {
+    -fx-background-color: transparent;
+    -fx-text-fill: #b99cff;
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 16px;
+    -fx-border-color: #8a5cf6;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 18px;
+    -fx-cursor: hand;
+}
+
+/* Styles of the difficulty buttons when the mouse is over them */
+.difficultyButton:hover {
+    -fx-background-color: #4a2a8c;
+}
+
+/* Styles of the selected difficulty button */
+.difficultyButton:selected {
+    -fx-background-color: #9b6bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Styles of the hints checkbox */
+.hintsCheckBox {
+    -fx-text-fill: #b99cff;
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+}
+
+/* Styles of the box of the hints checkbox */
+.hintsCheckBox .box {
+    -fx-background-color: transparent;
+    -fx-border-color: #8a5cf6;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+}
+
+/* Styles of the box of the hints checkbox when it is selected */
+.hintsCheckBox:selected .box {
+    -fx-background-color: #9b6bff;
+}
+
+/* Styles of the check mark of the hints checkbox */
+.hintsCheckBox:selected .mark {
+    -fx-background-color: white;
+}

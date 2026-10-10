@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Imports -->
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- FXML Document -->
+<!-- This file defines the start screen, where the player chooses the difficulty and the hints. -->
+<!-- The main container is a VBox that stacks every element in the center of the window. -->
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.project2.project2fpoe.controller.StartController"
+      alignment="CENTER"
+      spacing="30"
+      prefWidth="620"
+      prefHeight="760"
+      stylesheets="@styles.css">
+
+    <!-- Title of the game -->
+    <Label text="Val's Sudoku" styleClass="startTitle"/>
+
+    <!-- Difficulty selector -->
+    <VBox alignment="CENTER" spacing="12">
+        <Label text="Dificultad" styleClass="sectionLabel"/>
+
+        <fx:define>
+            <ToggleGroup fx:id="difficultyGroup"/>
+        </fx:define>
+
+        <HBox alignment="CENTER" spacing="10">
+            <ToggleButton text="Fácil" fx:id="easyButton" toggleGroup="$difficultyGroup" styleClass="difficultyButton"/>
+            <ToggleButton text="Medio" fx:id="mediumButton" toggleGroup="$difficultyGroup" styleClass="difficultyButton" selected="true"/>
+            <ToggleButton text="Difícil" fx:id="hardButton" toggleGroup="$difficultyGroup" styleClass="difficultyButton"/>
+        </HBox>
+    </VBox>
+
+    <!-- Option to enable or disable the hints -->
+    <CheckBox text="Permitir ayudas" fx:id="hintsCheckBox" selected="true" styleClass="hintsCheckBox"/>
+
+    <!-- Button to start the game -->
+    <Button text="Jugar" fx:id="playButton" styleClass="helpButton" prefWidth="160" prefHeight="45"/>
+
+</VBox>
