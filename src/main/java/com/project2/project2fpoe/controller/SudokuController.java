@@ -130,7 +130,7 @@ public class SudokuController {
                             if (!sudoku.setCell(finalRow, finalCol, value)) { // Check if the move is valid
                                 cell.getStyleClass().add("error"); // Set error style
                                 bottomLabel.setText("Ahí eso no va, bb"); // Display error message
-                                bottomLabel.setTextFill(Color.web("#c0476a")); // Set the label color to wine
+                                bottomLabel.setTextFill(Color.web("#b04a78")); // Set the label color to wine
                             } else if (sudoku.isSolved()) { // Check if the Sudoku is solved
                                 disableSudoku(); // Disable the Sudoku board
                                 return;
@@ -236,7 +236,8 @@ public class SudokuController {
         }
         helpButton.setDisable(true); // Disable the hint button
         bottomLabel.setText("Buena esa, sos una dura"); // Display success message
-        bottomLabel.setTextFill(Color.LIGHTGREEN); // Set the label color to light green
+        bottomLabel.setTextFill(Color.web("#e2d4ff")); // Set the label color to light lavender
+        bottomLabel.setStyle("-fx-font-weight: bold;"); // Make the success message stand out
     }
 
     /**
@@ -248,7 +249,7 @@ public class SudokuController {
         int[] hint = sudoku.findHint(); // Get {row, col, value} of a move that keeps the board resolvable
         if (hint == null) { // The current board has no solution
             bottomLabel.setText("Te metiste a un callejón sin salida, oís"); // Display warning message
-            bottomLabel.setTextFill(Color.web("#c0476a")); // Set the label color to wine
+            bottomLabel.setTextFill(Color.web("#b04a78")); // Set the label color to wine
             return;
         }
 
